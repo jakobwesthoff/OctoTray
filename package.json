@@ -5,6 +5,7 @@
   "description": "A menubar application to monitor an octoprint installation",
   "main": "main.js",
   "scripts": {
+    "dev": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jakob Westhoff <jakob@westhoffswelt.de> (http://westhoffswelt.de)",
