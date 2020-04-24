@@ -1,4 +1,10 @@
 ##
+# Project specific
+##
+public/build/**/*
+
+
+##
 # https://github.com/github/gitignore/blob/master/Node.gitignore
 ##
 
