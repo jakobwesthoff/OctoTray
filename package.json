@@ -8,5 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jakob Westhoff <jakob@westhoffswelt.de> (http://westhoffswelt.de)",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^8.2.3"
+  },
+  "dependencies": {}
 }
