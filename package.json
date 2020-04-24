@@ -1,0 +1,12 @@
+{
+  "name": "octoprint-menubar-status",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A menubar application to monitor an octoprint installation",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jakob Westhoff <jakob@westhoffswelt.de> (http://westhoffswelt.de)",
+  "license": "MIT"
+}
