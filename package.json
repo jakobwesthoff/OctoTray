@@ -12,5 +12,7 @@
   "devDependencies": {
     "electron": "^8.2.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "esm": "^3.2.25"
+  }
 }
