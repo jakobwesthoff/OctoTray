@@ -1,10 +1,14 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
+import { initIpc } from './ipc';
 
 let mainWindow;
 
 async function createWindow() {
   const win = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true,
+    },
     width: 800,
     height: 600,
     title: app.name,
@@ -24,7 +28,11 @@ async function createWindow() {
 }
 
 (async () => {
+  app.allowRendererProcessReuse = false;
   await app.whenReady();
+
+  initIpc();
+  
   mainWindow = await createWindow();
 
   // Emitted when the window is closed.
