@@ -6,6 +6,7 @@ import css from 'rollup-plugin-css-porter';
 import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import json from '@rollup/plugin-json';
+import svg from 'rollup-plugin-svg';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -42,6 +43,7 @@ export default {
     json(),
     globals(),
     builtins(),
+    svg(),
     css({ dest: 'public/build/bundle.css' }),
 
     // If we're building for production (npm run build

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
+  import Dashboard from './Dashboard.svelte';
   import Window from './Components/Window.svelte';
   import Header from './Components/Header.svelte';
   import Body from './Components/Body.svelte';
@@ -64,7 +65,7 @@
 </style>
 
 <Window>
-  <Header title="Configuration">
+  <Header title="Configuration" back={Dashboard}>
     {#if loading}
       <CircleSpinner size="4rem" />
     {/if}
