@@ -2,7 +2,16 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { initIpc } from './ipc';
 
+import reload from 'electron-reload';
+
 let mainWindow;
+
+if (!process.env.NODE_ENV !== 'production') {
+  reload(`${__dirname}/../../`, {
+    electron: path.join(`${__dirname}/../../`, 'node_modules', '.bin', 'electron'),
+    awaitWriteFinish: true,
+  });
+}
 
 async function createWindow() {
   const win = new BrowserWindow({
@@ -32,7 +41,7 @@ async function createWindow() {
   await app.whenReady();
 
   initIpc();
-  
+
   mainWindow = await createWindow();
 
   // Emitted when the window is closed.
