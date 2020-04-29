@@ -19,4 +19,20 @@ export class OctoPrintApi {
   async getConnectionSettings() {
     return this.fetchWithAuth(Method.GET, 'api/connection');
   }
+
+  async getPrinterProfiles() {
+    return this.fetchWithAuth(Method.GET, `api/printerprofiles`);
+  }
+
+  async getPrinterProfile(id) {
+    return this.fetchWithAuth(Method.GET, `api/printerprofiles/${id}`);
+  }
+
+  async getVersionInformation() {
+    return this.fetchWithAuth(Method.GET, `api/version`);
+  }
+
+  async getSettings() {
+    return this.fetchWithAuth(Method.GET, `api/settings`);
+  }
 }

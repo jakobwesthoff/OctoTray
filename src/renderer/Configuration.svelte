@@ -10,7 +10,7 @@
 
   import { ipc } from './Library/ipc';
 
-  import { OctoPrintApi } from './Library/OctoPrintApi';
+  import { checkConnection } from './Library/util';
   import { Method } from './Library/IpcConnector';
 
   let hostnameValue;
@@ -52,16 +52,6 @@
     });
   }
 
-  async function checkConnection(baseurl, apikey) {
-    const api = new OctoPrintApi(baseurl, apikey);
-
-    try {
-      await api.fetchWithAuth(Method.GET, 'api/job');
-      return undefined;
-    } catch (error) {
-      return error;
-    }
-  }
 
   async function onTestConnection(event) {
     withLoading(async () => {
@@ -136,7 +126,7 @@
         {#if connectionError === undefined}
           <div class="valid">Connection looks fine.</div>
         {:else}
-          <div class="invalid">Connection could not be established: {connectionError}</div>
+          <div class="invalid">Connection could not be established: {connectionError.message}</div>
         {/if}
       {/if}
     </div>

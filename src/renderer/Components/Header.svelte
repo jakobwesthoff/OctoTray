@@ -3,6 +3,7 @@
   import Back from './Icons/Back.svelte';
 
   export let title;
+  export let subtitle;
   export let back = undefined;
   export let disabled = false;
 
@@ -47,16 +48,35 @@
     transform: translate(0, -50%);
     height: 3.6rem;
   }
+
+  .subtitle {
+    font-size: 1.8rem;
+    color: var(--header-subtitle-color);
+    position: absolute;
+    top: 50%;
+    margin-left: .8rem;
+    transform: translate(0, -50%);
+  }
+
+  .subtitle:before {
+    content: '(';
+  }
+  .subtitle:after {
+    content: ')';
+  }
 </style>
 
 <div class="header">
   {#if back !== undefined}
     <span class="back-area">
-      <Back disabled={disabled} on:click={onBack} />
+      <Back {disabled} on:click={onBack} />
     </span>
   {/if}
   <section class:back>
     <span class="title">{title}</span>
+    {#if subtitle}
+      <span class="subtitle">{subtitle}</span>
+    {/if}
     <div class="float-right">
       <slot />
     </div>
