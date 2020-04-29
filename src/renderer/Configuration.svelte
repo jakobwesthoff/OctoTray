@@ -8,10 +8,10 @@
   import Footer from './Components/Footer.svelte';
   import CircleSpinner from './Components/CirlceSpinner.svelte';
 
-  import { ipc } from './ipc';
-  import { asyncAjax } from './utils';
+  import { ipc } from './Library/ipc';
 
-  import OctoPrintClient from '../../lib/OctoPrint/1.4.0';
+  import { OctoPrintApi } from './Library/OctoPrintApi';
+  import { Method } from './Library/IpcConnector';
 
   let hostnameValue;
   let apikeyValue;
@@ -53,9 +53,10 @@
   }
 
   async function checkConnection(baseurl, apikey) {
-    const client = new OctoPrintClient({ baseurl, apikey });
+    const api = new OctoPrintApi(baseurl, apikey);
+
     try {
-      await asyncAjax(client.job.get());
+      await api.fetchWithAuth(Method.GET, 'api/job');
       return undefined;
     } catch (error) {
       return error;
