@@ -4,8 +4,13 @@
 
   export let title;
   export let back = undefined;
+  export let disabled = false;
 
   function onBack() {
+    if (disabled) {
+      return;
+    }
+
     View.set(back);
   }
 </script>
@@ -47,7 +52,7 @@
 <div class="header">
   {#if back !== undefined}
     <span class="back-area">
-      <Back on:click={onBack} />
+      <Back disabled={disabled} on:click={onBack} />
     </span>
   {/if}
   <section class:back>

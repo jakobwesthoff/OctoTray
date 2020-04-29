@@ -9,10 +9,16 @@
   import CircleSpinner from './Components/CirlceSpinner.svelte';
 
   import { ipc } from './ipc';
+  import { asyncAjax } from './utils';
+
+  import OctoPrintClient from '../../lib/OctoPrint/1.4.0';
 
   let hostnameValue;
   let apikeyValue;
   let loading = true;
+
+  let connectionChecked = false;
+  let connectionError = undefined;
 
   async function withLoading(action) {
     loading = true;
@@ -28,12 +34,38 @@
 
       hostnameValue = hostname;
       apikeyValue = apikey;
+      connectionChecked = false;
+      connectionError = undefined;
     });
   }
 
   async function onSave(event) {
     withLoading(async () => {
+      connectionError = await checkConnection(hostnameValue, apikeyValue);
+      connectionChecked = true;
+
+      if (connectionError !== undefined) {
+        return;
+      }
+
       await ipc('set-configuration', { octoprint: { hostname: hostnameValue, apikey: apikeyValue } });
+    });
+  }
+
+  async function checkConnection(baseurl, apikey) {
+    const client = new OctoPrintClient({ baseurl, apikey });
+    try {
+      await asyncAjax(client.job.get());
+      return undefined;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async function onTestConnection(event) {
+    withLoading(async () => {
+      connectionError = await checkConnection(hostnameValue, apikeyValue);
+      connectionChecked = true;
     });
   }
 
@@ -62,10 +94,28 @@
   fieldset {
     padding: 0;
   }
+
+  .test-connection-container {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .test-connection-container .valid {
+    color: green;
+    margin: 1rem;
+  }
+
+  .test-connection-container .invalid {
+    color: red;
+    margin: 1rem;
+  }
 </style>
 
 <Window>
-  <Header title="Configuration" back={Dashboard}>
+  <Header title="Configuration" back={Dashboard} disabled={loading}>
     {#if loading}
       <CircleSpinner size="4rem" />
     {/if}
@@ -79,6 +129,16 @@
         <input type="text" id="apikey" bind:value={apikeyValue} disabled={loading} />
       </fieldset>
     </form>
+    <div class="test-connection-container">
+      <button class="button.primary" disabled={loading} on:click={onTestConnection}>Test Connection</button>
+      {#if connectionChecked}
+        {#if connectionError === undefined}
+          <div class="valid">Connection looks fine.</div>
+        {:else}
+          <div class="invalid">Connection could not be established: {connectionError}</div>
+        {/if}
+      {/if}
+    </div>
   </Body>
   <Footer clean>
     <div class="float-right button-area">

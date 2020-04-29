@@ -7,6 +7,7 @@ import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import json from '@rollup/plugin-json';
 import svg from 'rollup-plugin-svg';
+import amd from 'rollup-plugin-amd';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -40,6 +41,9 @@ export default {
       preferBuiltins: true,
     }),
     commonjs(),
+    amd({
+      include: 'lib/OctoPrint/**'
+    }),
     json(),
     globals(),
     builtins(),
