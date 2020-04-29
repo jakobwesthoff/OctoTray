@@ -27,8 +27,13 @@ export function initIpc() {
   ipcMain.on('fetch-http', async (event, responseId, { url, opts }) => {
     try {
       const response = await fetch(url, opts);
-      const document = await response.json();
-      event.sender.send(responseId, false, document);
+      if (response.status >= 200 && response.status < 299) {
+        const document = await response.json();
+        event.sender.send(responseId, false, document);
+      } else {
+        // Send to renderer
+        throw new Error(`Non 2xx status code (${response.status}): ${response.statusText}`);
+      }
     } catch (error) {
       const serialized = serializeError(error);
       event.sender.send(responseId, serialized);
