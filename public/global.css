@@ -24,5 +24,7 @@ html {
   --accent-color-light: #fff3d4;
   --accent-color-dark: #fd9431;
   --accent-color-disabled: #d1d1d1;
-}
 
+  --dashboard-camera-background: #817d7d;
+  --dashboard-camera-icon: #f4f5f6;
+}

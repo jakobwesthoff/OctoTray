@@ -12,6 +12,8 @@
 
   import { checkConnection } from './Library/util';
   import { Method } from './Library/IpcConnector';
+  import { OctoPrintUpdaterInstance } from './Library/OctoPrintUpdater';
+  import { OctoPrintApi } from './Library/OctoPrintApi';
 
   let hostnameValue;
   let apikeyValue;
@@ -49,9 +51,9 @@
       }
 
       await ipc('set-configuration', { octoprint: { hostname: hostnameValue, apikey: apikeyValue } });
+      OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostnameValue, apikeyValue));
     });
   }
-
 
   async function onTestConnection(event) {
     withLoading(async () => {
