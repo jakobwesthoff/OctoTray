@@ -3,6 +3,7 @@ import * as path from 'path';
 import { initIpc } from './ipc';
 
 import reload from 'electron-reload';
+import devtron from 'devtron';
 
 let mainWindow;
 
@@ -28,6 +29,7 @@ async function createWindow() {
     win.show();
 
     if (process.env.NODE_ENV !== 'production') {
+      devtron.install();      
       win.webContents.openDevTools();
     }
   });
