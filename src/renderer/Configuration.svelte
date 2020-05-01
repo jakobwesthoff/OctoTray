@@ -1,12 +1,10 @@
 <script>
   import { onMount } from 'svelte';
 
+  import { View } from './stores/view';
+
   import Dashboard from './Dashboard.svelte';
   import Window from './Components/Window.svelte';
-  import Header from './Components/Header.svelte';
-  import Body from './Components/Body.svelte';
-  import Footer from './Components/Footer.svelte';
-  import CircleSpinner from './Components/CirlceSpinner.svelte';
 
   import { ipc } from './Library/ipc';
 
@@ -29,16 +27,7 @@
   }
 
   async function onCancel(event) {
-    withLoading(async () => {
-      const {
-        octoprint: { hostname, apikey },
-      } = await ipc('get-configuration');
-
-      hostnameValue = hostname;
-      apikeyValue = apikey;
-      connectionChecked = false;
-      connectionError = undefined;
-    });
+    View.set(Dashboard);
   }
 
   async function onSave(event) {
@@ -52,6 +41,8 @@
 
       await ipc('set-configuration', { octoprint: { hostname: hostnameValue, apikey: apikeyValue } });
       OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostnameValue, apikeyValue));
+
+      View.set(Dashboard);
     });
   }
 
@@ -75,20 +66,59 @@
 </script>
 
 <style>
-  .button-area {
-    margin-top: 1rem;
-    margin-right: 2rem;
+  .title {
+    font-size: 2.4rem;
+    color: var(--text-primary-color);
+    font-weight: bold;
+  }
+
+  .side-by-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    height: 100%;
+  }
+
+  .left {
+    flex-grow: 1;
+    padding: 2rem 2rem;
+    height: 100%;
+  }
+
+  .right {
+    height: 100%;
+    flex-grow: shrink;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right button {
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .right button:first-child {
+    margin-bottom: 2px;
   }
 
   label {
-    margin-top: 1.4rem;
+    font-size: 1.7rem;
+    color: var(--text-secondary-color);
+    font-weight: bold;
+    margin-top: 0.8rem;
+  }
+
+  input[type='text'] {
+    margin-bottom: 1rem;
   }
 
   fieldset {
     padding: 0;
   }
 
-  .test-connection-container {
+  /* .test-connection-container {
     margin-top: 2rem;
     width: 100%;
     display: flex;
@@ -104,39 +134,35 @@
   .test-connection-container .invalid {
     color: red;
     margin: 1rem;
-  }
+  } */
 </style>
 
 <Window>
-  <Header title="Configuration" back={Dashboard} disabled={loading}>
-    {#if loading}
-      <CircleSpinner size="4rem" />
-    {/if}
-  </Header>
-  <Body>
-    <form>
-      <fieldset>
-        <label for="hostname">Octoprint Hostname</label>
-        <input type="text" id="hostname" bind:value={hostnameValue} disabled={loading} />
-        <label for="apikey">ApiKey</label>
-        <input type="text" id="apikey" bind:value={apikeyValue} disabled={loading} />
-      </fieldset>
-    </form>
-    <div class="test-connection-container">
-      <button class="button.primary" disabled={loading} on:click={onTestConnection}>Test Connection</button>
-      {#if connectionChecked}
-        {#if connectionError === undefined}
-          <div class="valid">Connection looks fine.</div>
-        {:else}
-          <div class="invalid">Connection could not be established: {connectionError.message}</div>
-        {/if}
+  <div class="side-by-side">
+    <div class="left">
+      <div class="title">Configuration</div>
+      <form>
+        <fieldset>
+          <label for="hostname">Octoprint Hostname</label>
+          <input type="text" id="hostname" bind:value={hostnameValue} disabled={loading} />
+          <label for="apikey">ApiKey</label>
+          <input type="text" id="apikey" bind:value={apikeyValue} disabled={loading} />
+        </fieldset>
+      </form>
+      <!-- <div class="test-connection-container">
+    <button class="button.primary" disabled={loading} on:click={onTestConnection}>Test Connection</button>
+    {#if connectionChecked}
+      {#if connectionError === undefined}
+        <div class="valid">Connection looks fine.</div>
+      {:else}
+        <div class="invalid">Connection could not be established: {connectionError.message}</div>
       {/if}
+    {/if}
+  </div> -->
     </div>
-  </Body>
-  <Footer clean>
-    <div class="float-right button-area">
+    <div class="right">
       <button class="button-primary" disabled={loading} on:click={onSave}>Save</button>
       <button class="button-primary" disabled={loading} on:click={onCancel}>Cancel</button>
     </div>
-  </Footer>
+  </div>
 </Window>

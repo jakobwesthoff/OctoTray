@@ -22,16 +22,105 @@ html {
   --footer-background-color: var(--header-background-color);
   --footer-border-color: var(--header-border-color);
 
-  --accent-color: #FFC300;
+  --accent-color: #ffc300;
   --accent-color-light: #fff3d4;
   --accent-color-dark: #fd9431;
   --accent-color-disabled: #d1d1d1;
 
-  --dashboard-camera-background: #817d7d;
   --dashboard-camera-icon: #f4f5f6;
 
   --text-primary-color: #000000;
   --text-secondary-color: #777777;
 
-  --accent-background-color: #E1E1E1;
+  --accent-background-color: #e1e1e1;
+  --accent-background-secondary: #606c76;
+}
+
+::selection {
+  background: var(--accent-color);
+}
+
+input[type='email'],
+input[type='number'],
+input[type='password'],
+input[type='search'],
+input[type='tel'],
+input[type='text'],
+input[type='url'],
+textarea,
+select {
+  border-color: var(--accent-background-color);
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+input[type='email']:focus,
+input[type='number']:focus,
+input[type='password']:focus,
+input[type='search']:focus,
+input[type='tel']:focus,
+input[type='text']:focus,
+input[type='url']:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent-background-secondary);
+  background-color: var(--accent-background-color);
+}
+.button,
+button,
+input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+  background-color: var(--accent-background-color);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border: none;
+  color: var(--main-font-color);
+}
+
+.button:focus,
+button:focus,
+input[type='button']:focus,
+input[type='reset']:focus,
+input[type='submit']:focus,
+.button:hover,
+button:hover,
+input[type='button']:hover,
+input[type='reset']:hover,
+input[type='submit']:hover {
+  background-color: var(--accent-background-secondary);
+  color: var(--accent-color);
+}
+
+.button[disabled]:focus, .button[disabled]:hover, button[disabled]:focus, button[disabled]:hover, input[type='button'][disabled]:focus, input[type='button'][disabled]:hover, input[type='reset'][disabled]:focus, input[type='reset'][disabled]:hover, input[type='submit'][disabled]:focus, input[type='submit'][disabled]:hover {
+  background-color: var(--accent-background-color);
+  border: none;
+  color: var(--main-font-color);
+}
+
+/**
+/* More native feel                                      
+**/
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+input,
+button,
+textarea,
+:focus {
+  outline: none; // You should add some other style for :focus to help UX/a11y
+}
+
+a:not([draggable='true']),
+img:not([draggable='true']) {
+  -webkit-user-drag: none;
+  user-drag: none; /* Technically not supported in Electron yet */
+}
+a[href^="http://"],
+a[href^="https://"],
+a[href^="ftp://"]
+{
+  -webkit-user-drag: auto;
+  user-drag: auto; /* Technically not supported in Electron yet */
 }

@@ -1,9 +1,5 @@
 <script>
   import Window from './Components/Window.svelte';
-  import Header from './Components/Header.svelte';
-  import Body from './Components/Body.svelte';
-  import Footer from './Components/Footer.svelte';
-  import CircleSpinner from './Components/CirlceSpinner.svelte';
   import Camera from './Components/Icons/Camera.svelte';
 
   import { onMount } from 'svelte';
@@ -54,7 +50,7 @@
   .camera {
     width: 32rem;
     height: 100%;
-    background: var(--dashboard-camera-background);
+    background: var(--accent-background-secondary);
     overflow: hidden;
     position: relative;
   }

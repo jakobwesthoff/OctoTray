@@ -8,8 +8,6 @@
   import { ipc } from './Library/ipc';
   import { checkConnection } from './Library/util';
 
-  // TODO View.set(Loader)?
-
   (async () => {
     const {
       octoprint: { hostname, apikey },
