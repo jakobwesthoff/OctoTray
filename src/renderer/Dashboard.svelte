@@ -85,14 +85,14 @@
   .side-by-side .right {
     height: 100%;
     flex-grow: 1;
-    padding: 3rem 2rem;
+    padding: 2rem 2rem;
   }
 
   .printer-name {
     font-size: 2rem;
     color: var(--text-secondary-color);
     font-weight: bold;
-    margin: 0 0 2rem 0;
+    margin: 0 0 1.3rem 0;
   }
 
   .printer-state {
@@ -125,10 +125,18 @@
   .progress-time {
     width: 100%;
     font-size: 2rem;
+    margin: 0 0 1.3rem 0;
   }
 
   .time-remaining {
     float: right;
+  }
+
+  .filename {
+    width: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    overflow: hidden;
   }
 </style>
 
@@ -146,8 +154,8 @@
       {#if $CurrentPrinterProfile.ready}
         <div class="printer-name">{$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model}</div>
       {/if}
-      {#if $ConnectionSettings.ready}
-        <div class="printer-state">{$ConnectionSettings.data.current.state}</div>
+      {#if $CurrentJob.ready}
+        <div class="printer-state">{$CurrentJob.data.state}</div>
       {/if}
       {#if $CurrentJob.ready && $CurrentJob.data.state === 'Printing'}
         <div class="progress-percentage">{Math.round($CurrentJob.data.progress.completion)}%</div>
@@ -158,6 +166,7 @@
           <span class="time-elapsed">{timeElapsed}</span>
           <span class="time-remaining">{timeRemaining}</span>
         </div>
+        <marquee class="filename">{$CurrentJob.data.job.file.name}</marquee>
       {/if}
     </div>
   </div>

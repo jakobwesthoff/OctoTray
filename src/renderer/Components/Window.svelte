@@ -1,8 +1,8 @@
 <style>
   .window {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 10px;
+    left: 10px;
     width: 700px;
     height: 250px;
     background-color: white;

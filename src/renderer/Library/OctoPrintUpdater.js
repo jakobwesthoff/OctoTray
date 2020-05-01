@@ -4,7 +4,7 @@ import { CurrentPrinterProfile, VersionInformation, Settings, ConnectionSettings
 
 class OctoPrintUpdater {
   static DEFAULT_CONFIG = {
-    connectionSettingsInterval: 10000,
+    connectionSettingsInterval: Infinity,
     currentPrinterProfileInterval: 60000,
     versionInformationInterval: Infinity,
     settingsInterval: Infinity,

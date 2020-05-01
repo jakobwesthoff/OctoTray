@@ -5,7 +5,7 @@ import { initIpc } from './ipc';
 import reload from 'electron-reload';
 import devtron from 'devtron';
 
-let mainWindow;
+import { menubar } from 'menubar';
 
 if (!process.env.NODE_ENV !== 'production') {
   reload(`${__dirname}/../../`, {
@@ -14,31 +14,26 @@ if (!process.env.NODE_ENV !== 'production') {
   });
 }
 
-async function createWindow() {
-  const win = new BrowserWindow({
-    webPreferences: {
-      nodeIntegration: true,
+async function createMenubar() {
+  return menubar({
+    browserWindow: {
+      webPreferences: {
+        nodeIntegration: true,
+      },
+      title: app.name,
+      show: false,
+      transparent: true,
+      frame: false,
+      height: 340,
+      width: 770,
     },
-    width: 770,
-    height: 340,
-    title: app.name,
-    show: false,
-    transparent: true,
-    frame: true,
+    dir: path.join(__dirname, '../../public'),
+    alwaysOnTop: true,
+    preloadWindow: true,
   });
-
-  win.on('ready-to-show', () => {
-    win.show();
-
-    if (process.env.NODE_ENV !== 'production') {
-      devtron.install();      
-      win.webContents.openDevTools();
-    }
-  });
-
-  await win.loadFile(path.join(__dirname, '../../public', 'index.html'));
-  return win;
 }
+
+let menubarApp;
 
 (async () => {
   app.allowRendererProcessReuse = false;
@@ -46,13 +41,13 @@ async function createWindow() {
 
   initIpc();
 
-  mainWindow = await createWindow();
+  menubarApp = await createMenubar();
+  menubarApp.on('ready', () => {
+    menubarApp.showWindow();
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-
-    // Exit if window is closes, even though this is not macOS default behaviour
-    app.quit();
+    if (process.env.NODE_ENV !== 'production') {
+      devtron.install();
+      menubarApp.window.webContents.openDevTools();
+    }
   });
 })();
