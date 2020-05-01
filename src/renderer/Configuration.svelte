@@ -1,6 +1,9 @@
 <script>
   import { onMount } from 'svelte';
 
+  import ExclamationSvg from '@fortawesome/fontawesome-free/svgs/solid/exclamation-circle.svg';
+  import CheckSvg from '@fortawesome/fontawesome-free/svgs/solid/check-circle.svg';
+
   import { View } from './stores/view';
 
   import Window from './Components/Window.svelte';
@@ -65,10 +68,35 @@
 </script>
 
 <style>
+  .title-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .title-container span:not(.title) {
+    flex-shrink: 1;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .title-container span :global(svg) {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .error :global(svg) {
+    fill: red;
+  }
+
+  .success :global(svg) {
+    fill: green;
+  }
+
   .title {
     font-size: 2.4rem;
     color: var(--text-primary-color);
     font-weight: bold;
+    flex-grow: 1;
   }
 
   .side-by-side {
@@ -111,35 +139,27 @@
 
   input[type='text'] {
     margin-bottom: 1rem;
+    transition: width 0.4s ease-in-out;
   }
 
   fieldset {
     padding: 0;
   }
-
-  /* .test-connection-container {
-    margin-top: 2rem;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .test-connection-container .valid {
-    color: green;
-    margin: 1rem;
-  }
-
-  .test-connection-container .invalid {
-    color: red;
-    margin: 1rem;
-  } */
 </style>
 
 <Window>
   <div class="side-by-side">
     <div class="left">
-      <div class="title">Configuration</div>
+      <div class="title-container">
+        <div class="title">Configuration</div>
+        {#if connectionChecked}
+          {#if connectionError !== undefined}
+            <span class="error" title={connectionError.message}>
+              {@html ExclamationSvg}
+            </span>
+          {/if}
+        {/if}
+      </div>
       <form>
         <fieldset>
           <label for="hostname">Octoprint Hostname</label>
@@ -148,16 +168,6 @@
           <input type="text" id="apikey" bind:value={apikeyValue} disabled={loading} />
         </fieldset>
       </form>
-      <!-- <div class="test-connection-container">
-    <button class="button.primary" disabled={loading} on:click={onTestConnection}>Test Connection</button>
-    {#if connectionChecked}
-      {#if connectionError === undefined}
-        <div class="valid">Connection looks fine.</div>
-      {:else}
-        <div class="invalid">Connection could not be established: {connectionError.message}</div>
-      {/if}
-    {/if}
-  </div> -->
     </div>
     <div class="right">
       <button class="button-primary" disabled={loading} on:click={onSave}>Save</button>
