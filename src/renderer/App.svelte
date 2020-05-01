@@ -1,5 +1,5 @@
 <script>
-  import { View } from './stores/view';
+  import { View, DASHBOARD, CONFIGURATION } from './stores/view';
 
   import Configuration from './Configuration.svelte';
   import Dashboard from './Dashboard.svelte';
@@ -7,6 +7,20 @@
   import { OctoPrintApi } from './Library/OctoPrintApi';
   import { ipc } from './Library/ipc';
   import { checkConnection } from './Library/util';
+
+  let activeViewComponent;
+  $: {
+    switch ($View) {
+      case DASHBOARD:
+        activeViewComponent = Dashboard;
+        break;
+      case CONFIGURATION:
+        activeViewComponent = Configuration;
+        break;
+      default:
+        activeViewComponent = undefined;
+    }
+  }
 
   (async () => {
     const {
@@ -16,10 +30,10 @@
     OctoPrintUpdaterInstance.start();
 
     if (await checkConnection(hostname, apikey)) {
-      View.set(Configuration);
+      View.gotoConfiguration;
     } else {
       OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostname, apikey));
-      View.set(Dashboard);
+      View.gotoDashboard();
     }
   })();
 </script>
@@ -28,4 +42,4 @@
 
 </style>
 
-<svelte:component this={$View} />
+<svelte:component this={activeViewComponent} />

@@ -1,8 +1,7 @@
 <script>
   import Window from './Components/Window.svelte';
-  import Camera from './Components/Icons/Camera.svelte';
 
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
 
   import {
     CurrentPrinterProfile,
@@ -12,7 +11,10 @@
     CurrentJob,
   } from './stores/octoprint';
 
-  import { Active } from './stores/view';
+  import { View, Active } from './stores/view';
+
+  import CameraSvg from '@fortawesome/fontawesome-free/svgs/solid/camera.svg';
+  import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/cog.svg';
 
   let timeRemaining = '';
   let timeElapsed = '';
@@ -41,8 +43,17 @@
     }
   }
 
-  $: {
-    console.log($Active);
+  let cameraEnabled = false;
+  onMount(() => {
+    cameraEnabled = true;
+  });
+
+  async function onConfiguration(event) {
+    // Hack to ensure camera stream is stopped and not left dangling, when
+    // changing to configuration.
+    cameraEnabled = false;
+    await tick();
+    View.gotoConfiguration();
   }
 </script>
 
@@ -53,6 +64,16 @@
     background: var(--accent-background-secondary);
     overflow: hidden;
     position: relative;
+  }
+
+  .camera :global(svg) {
+    fill: var(--accent-background-color);
+    width: 8rem;
+    height: 8rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .camera .stream {
@@ -66,13 +87,6 @@
 
   .camera .stream:not(.active) {
     visibility: hidden;
-  }
-
-  .camera :global(.icon) {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 
   .side-by-side {
@@ -94,11 +108,32 @@
     padding: 2rem 2rem;
   }
 
+  .title {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 1.3rem 0;
+  }
+
   .printer-name {
     font-size: 2rem;
     color: var(--text-secondary-color);
     font-weight: bold;
-    margin: 0 0 1.3rem 0;
+    flex-grow: 1;
+  }
+
+  .configuration {
+    flex-shrink: 1;
+  }
+
+  .configuration :global(svg) {
+    fill: var(--accent-background-color);
+    width: 3rem;
+    height: 3rem;
+    transition: fill 0.2s ease-in-out;
+  }
+
+  .configuration :global(svg):hover {
+    fill: var(--accent-background-secondary);
   }
 
   .printer-state {
@@ -150,17 +185,28 @@
   <div class="side-by-side">
     <div class="left">
       <div class="camera">
-        <Camera />
+        {@html CameraSvg}
         {#if $WebCamUrl.ready && $WebCamUrl.data !== ''}
-        <!-- Hack to ensure that the mjpeg stream is canceled if not active. Otherwise the stream stays active even if it is not displayed.-->
-          <img src={$Active ? $WebCamUrl.data : '#'} alt="Webcam" class="stream" class:active={$Active} />
+          <!-- Hack to ensure that the mjpeg stream is canceled if not active. Otherwise the stream stays active even if it is not displayed.-->
+          <img
+            src={$Active && cameraEnabled ? $WebCamUrl.data : '#'}
+            alt="Webcam"
+            class="stream"
+            class:active={$Active} />
         {/if}
       </div>
     </div>
     <div class="right">
-      {#if $CurrentPrinterProfile.ready}
-        <div class="printer-name">{$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model}</div>
-      {/if}
+      <div class="title">
+        <div class="printer-name">
+          {#if $CurrentPrinterProfile.ready}
+            {$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model}
+          {/if}
+        </div>
+        <div class="configuration" on:click={onConfiguration}>
+          {@html CogSvg}
+        </div>
+      </div>
       {#if $CurrentJob.ready}
         <div class="printer-state">{$CurrentJob.data.state}</div>
       {/if}

@@ -3,7 +3,6 @@
 
   import { View } from './stores/view';
 
-  import Dashboard from './Dashboard.svelte';
   import Window from './Components/Window.svelte';
 
   import { ipc } from './Library/ipc';
@@ -27,7 +26,7 @@
   }
 
   async function onCancel(event) {
-    View.set(Dashboard);
+    View.gotoDashboard();
   }
 
   async function onSave(event) {
@@ -42,7 +41,7 @@
       await ipc('set-configuration', { octoprint: { hostname: hostnameValue, apikey: apikeyValue } });
       OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostnameValue, apikeyValue));
 
-      View.set(Dashboard);
+      View.gotoDashboard();
     });
   }
 

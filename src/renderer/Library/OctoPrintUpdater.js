@@ -87,12 +87,10 @@ class OctoPrintUpdater {
       // Pause all execution
       this.paused = true;
       this.stop();
-      console.log('All updates paused');
     } else if (this.paused === true && active === true) {
       // resume execution
       this.paused = false;
       this.start();
-      console.log('Resuming all updates');
     }
 
     // Every other case can be ignored

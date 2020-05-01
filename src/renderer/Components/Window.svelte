@@ -1,3 +1,8 @@
+<script>
+  import { fade } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+</script>
+
 <style>
   .window {
     position: absolute;
@@ -7,8 +12,8 @@
     height: 250px;
     background-color: white;
     border-radius: 17px;
-    box-shadow: 12px 10px 17px 6px rgba(0, 0, 0, .3);
-    overflow:hidden;
+    box-shadow: 12px 10px 17px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
     padding: 0;
     margin: 0;
     display: flex;
@@ -16,6 +21,6 @@
   }
 </style>
 
-<div class="window">
+<div class="window" transition:fade={{ duration: 400, easing: quintOut }}>
   <slot />
 </div>
