@@ -1,6 +1,14 @@
 import isFunction from 'lodash/isFunction';
 
-import { CurrentPrinterProfile, VersionInformation, Settings, ConnectionSettings, CurrentJob } from '../stores/octoprint';
+import {
+  CurrentPrinterProfile,
+  VersionInformation,
+  Settings,
+  ConnectionSettings,
+  CurrentJob,
+} from '../stores/octoprint';
+
+import { Active } from '../stores/view';
 
 class OctoPrintUpdater {
   static DEFAULT_CONFIG = {
@@ -16,6 +24,10 @@ class OctoPrintUpdater {
     this.api = undefined;
     this.timers = {};
     this.updateQueue = [];
+
+    this.paused = false;
+
+    Active.subscribe((active) => this.handleActiveChange(active));
   }
 
   setApi(api) {
@@ -62,12 +74,28 @@ class OctoPrintUpdater {
       const data = await this[handlerFn]();
       store.set({ ready: true, data });
 
-      if (Number.isFinite(this.config[configIntervalId])) {
+      if (Number.isFinite(this.config[configIntervalId]) && this.paused !== true) {
         this.timers[timerId] = setTimeout(timeoutFn, this.config[configIntervalId]);
       }
     };
 
     setTimeout(timeoutFn, 0);
+  }
+
+  handleActiveChange(active) {
+    if (this.paused === false && active === false) {
+      // Pause all execution
+      this.paused = true;
+      this.stop();
+      console.log('All updates paused');
+    } else if (this.paused === true && active === true) {
+      // resume execution
+      this.paused = false;
+      this.start();
+      console.log('Resuming all updates');
+    }
+
+    // Every other case can be ignored
   }
 
   async onConnectionSettings() {

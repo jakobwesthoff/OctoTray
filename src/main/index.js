@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
-import { initIpc } from './ipc';
+import { initIpc, setActive } from './ipc';
 
 import reload from 'electron-reload';
 import devtron from 'devtron';
@@ -19,6 +19,7 @@ async function createMenubar() {
     browserWindow: {
       webPreferences: {
         nodeIntegration: true,
+        backgroundThrottling: false,
       },
       title: app.name,
       show: false,
@@ -49,5 +50,16 @@ let menubarApp;
       devtron.install();
       menubarApp.window.webContents.openDevTools();
     }
+  });
+
+  menubarApp.on('show', () => {
+    setActive(true);
+  });
+
+  menubarApp.on('hide', () => {
+    setActive(false);
+  });
+  menubarApp.on('focus-lost', () => {
+    setActive(false);
   });
 })();

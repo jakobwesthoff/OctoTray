@@ -16,6 +16,8 @@
     CurrentJob,
   } from './stores/octoprint';
 
+  import { Active } from './stores/view';
+
   let timeRemaining = '';
   let timeElapsed = '';
 
@@ -42,6 +44,10 @@
       timeRemaining = formatTime($CurrentJob.data.progress.printTimeLeft);
     }
   }
+
+  $: {
+    console.log($Active);
+  }
 </script>
 
 <style>
@@ -60,6 +66,10 @@
     position: absolute;
     top: 0;
     left: 0;
+  }
+
+  .camera .stream:not(.active) {
+    visibility: hidden;
   }
 
   .camera :global(.icon) {
@@ -146,7 +156,8 @@
       <div class="camera">
         <Camera />
         {#if $WebCamUrl.ready && $WebCamUrl.data !== ''}
-          <div class="stream" style="background-image: url({$WebCamUrl.data});" />
+        <!-- Hack to ensure that the mjpeg stream is canceled if not active. Otherwise the stream stays active even if it is not displayed.-->
+          <img src={$Active ? $WebCamUrl.data : '#'} alt="Webcam" class="stream" class:active={$Active} />
         {/if}
       </div>
     </div>

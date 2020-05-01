@@ -3,6 +3,8 @@ import Store from 'electron-store';
 import fetch from 'node-fetch';
 import { serializeError } from 'serialize-error';
 
+const registeredWindows = [];
+
 export function initIpc() {
   const store = new Store();
   if (store.size === 0) {
@@ -14,6 +16,10 @@ export function initIpc() {
       },
     });
   }
+
+  ipcMain.on('register-window', (event) => {
+    registeredWindows.push(event.sender);
+  });
 
   ipcMain.on('get-configuration', (event, responseId) => {
     event.sender.send(responseId, false, store.store);
@@ -38,5 +44,11 @@ export function initIpc() {
       const serialized = serializeError(error);
       event.sender.send(responseId, serialized);
     }
+  });
+}
+
+export function setActive(active) {
+  registeredWindows.forEach((sender) => {
+    sender.send('set-active', active);
   });
 }
