@@ -2,10 +2,12 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
+  background-color: transparent;
 }
 html {
   width: 100%;
   height: 100%;
+  background-color: transparent;
 }
 
 :root {
@@ -20,11 +22,16 @@ html {
   --footer-background-color: var(--header-background-color);
   --footer-border-color: var(--header-border-color);
 
-  --accent-color: #f6b73c;
+  --accent-color: #FFC300;
   --accent-color-light: #fff3d4;
   --accent-color-dark: #fd9431;
   --accent-color-disabled: #d1d1d1;
 
   --dashboard-camera-background: #817d7d;
   --dashboard-camera-icon: #f4f5f6;
+
+  --text-primary-color: #000000;
+  --text-secondary-color: #777777;
+
+  --accent-background-color: #E1E1E1;
 }

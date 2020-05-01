@@ -1,18 +1,21 @@
 import isFunction from 'lodash/isFunction';
 
-import { CurrentPrinterProfile, VersionInformation, Settings } from '../stores/octoprint';
+import { CurrentPrinterProfile, VersionInformation, Settings, ConnectionSettings, CurrentJob } from '../stores/octoprint';
 
 class OctoPrintUpdater {
   static DEFAULT_CONFIG = {
+    connectionSettingsInterval: 10000,
     currentPrinterProfileInterval: 60000,
     versionInformationInterval: Infinity,
     settingsInterval: Infinity,
+    currentJobInterval: 1000,
   };
 
   constructor() {
     this.config = OctoPrintUpdater.DEFAULT_CONFIG;
     this.api = undefined;
     this.timers = {};
+    this.updateQueue = [];
   }
 
   setApi(api) {
@@ -26,9 +29,11 @@ class OctoPrintUpdater {
   }
 
   start() {
+    this.registerInterval('ConnectionSettings', ConnectionSettings);
     this.registerInterval('currentPrinterProfile', CurrentPrinterProfile);
     this.registerInterval('versionInformation', VersionInformation);
     this.registerInterval('settings', Settings);
+    this.registerInterval('currentJob', CurrentJob);
   }
 
   stop() {
@@ -65,11 +70,13 @@ class OctoPrintUpdater {
     setTimeout(timeoutFn, 0);
   }
 
+  async onConnectionSettings() {
+    return await this.api.getConnectionSettings();
+  }
+
   async onCurrentPrinterProfile() {
     const connection = await this.api.getConnectionSettings();
-    const profile = await this.api.getPrinterProfile(connection.current.printerProfile);
-
-    return profile;
+    return await this.api.getPrinterProfile(connection.current.printerProfile);
   }
 
   async onVersionInformation() {
@@ -78,6 +85,10 @@ class OctoPrintUpdater {
 
   async onSettings() {
     return await this.api.getSettings();
+  }
+
+  async onCurrentJob() {
+    return await this.api.getCurrentJob();
   }
 }
 

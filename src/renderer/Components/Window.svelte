@@ -1,12 +1,21 @@
 <style>
-  .row-container {
+  .window {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 700px;
+    height: 250px;
+    background-color: white;
+    border-radius: 17px;
+    box-shadow: 12px 10px 17px 6px rgba(0, 0, 0, .3);
+    overflow:hidden;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
   }
 </style>
 
-<div class="row-container">
+<div class="window">
   <slot />
 </div>

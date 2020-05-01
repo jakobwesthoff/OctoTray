@@ -19,10 +19,12 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
-    width: 800,
-    height: 600,
+    width: 770,
+    height: 340,
     title: app.name,
     show: false,
+    transparent: true,
+    frame: true,
   });
 
   win.on('ready-to-show', () => {

@@ -35,4 +35,8 @@ export class OctoPrintApi {
   async getSettings() {
     return this.fetchWithAuth(Method.GET, `api/settings`);
   }
+
+  async getCurrentJob() {
+    return this.fetchWithAuth(Method.GET, `api/job`);
+  }
 }
