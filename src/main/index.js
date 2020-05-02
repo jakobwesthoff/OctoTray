@@ -1,23 +1,12 @@
-import { app } from 'electron';
+import { app, Menu } from 'electron';
 import * as path from 'path';
-import { initIpc, setActive } from './ipc';
+import { initIpc, setActive, gotoConfiguration } from './ipc';
 
 import { menubar } from 'menubar';
 
 import unhandled from 'electron-unhandled';
-unhandled();
 
-// https://github.com/electron/electron/issues/9304
-if (process.env.NODE_ENV === 'development') {
-  process.noAsar = true;
-  import('electron-reload').then((reload) => {
-    reload(`${__dirname}/../../`, {
-      electron: path.join(`${__dirname}/../../`, 'node_modules', '.bin', 'electron'),
-      awaitWriteFinish: true,
-    });
-  });
-  process.noAsar = false;
-}
+unhandled();
 
 async function createMenubar() {
   const index = 'file://' + path.join(__dirname, '../../public', 'index.html');
@@ -32,27 +21,70 @@ async function createMenubar() {
       show: false,
       transparent: true,
       frame: false,
-      height: 340,
-      width: 770,
+      height: 300,
+      width: 750,
+      moveable: false,
+      resizable: false,
+      minimizable: false,
+      maximizable: false,
     },
     index,
     alwaysOnTop: true,
     preloadWindow: true,
-    showDockIcon: true,
+    showDockIcon: false,
+    hasShadow: false,
   });
+}
+
+function createMenu() {
+  return Menu.buildFromTemplate([
+    {
+      label: 'Configuration',
+      click() {
+        gotoConfiguration();
+        menubarApp.showWindow();
+      },
+    },
+    // {
+    //   label: 'About',
+    //   click() {
+    //     console.log('ABOUT');
+    //   },
+    // },
+    {
+      type: 'separator',
+    },
+    {
+      role: 'quit',
+    },
+  ]);
 }
 
 let menubarApp;
 
 (async () => {
+  // https://github.com/electron/electron/issues/9304
+  if (process.env.NODE_ENV === 'development') {
+    process.noAsar = true;
+    const reload = require('electron-reload');
+    reload(`${__dirname}/../../`, {
+      electron: path.join(`${__dirname}/../../`, 'node_modules', '.bin', 'electron'),
+      awaitWriteFinish: true,
+    });
+    process.noAsar = false;
+  }
+
   app.allowRendererProcessReuse = false;
   await app.whenReady();
 
   initIpc();
 
   menubarApp = await createMenubar();
+  const contextMenu = createMenu();
 
   menubarApp.on('ready', async () => {
+    menubarApp.tray.on('right-click', () => menubarApp.tray.popUpContextMenu(contextMenu));
+
     if (process.env.NODE_ENV === 'development') {
       menubarApp.showWindow();
       const devtron = await import('devtron');

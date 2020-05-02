@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import * as uuid from 'uuid';
 import { deserializeError } from 'serialize-error';
-import { Active } from '../stores/view';
+import { Active, View } from '../stores/view';
 
 export async function ipc(name, data) {
   const responseId = `${name}-${uuid.v4()}`;
@@ -22,5 +22,13 @@ export async function initIpc() {
 
   ipcRenderer.on('set-active', (event, active) => {
     Active.set(active);
+  });
+
+  ipcRenderer.on('goto-dashboard', (event) => {
+    View.gotoDashboard();
+  });
+
+  ipcRenderer.on('goto-configuration', (event) => {
+    View.gotoConfiguration();
   });
 }

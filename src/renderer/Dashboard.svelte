@@ -3,6 +3,8 @@
 
   import { onMount, onDestroy, tick } from 'svelte';
 
+  import { ipc } from './Library/ipc';
+
   import {
     CurrentPrinterProfile,
     VersionInformation,
@@ -11,7 +13,7 @@
     CurrentJob,
   } from './stores/octoprint';
 
-  import { View, Active } from './stores/view';
+  import { View, Active, CameraEnabled } from './stores/view';
 
   import CameraSvg from '@fortawesome/fontawesome-free/svgs/solid/camera.svg';
   import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/cog.svg';
@@ -43,17 +45,12 @@
     }
   }
 
-  let cameraEnabled = false;
   onMount(() => {
-    cameraEnabled = true;
+    $CameraEnabled = true;
   });
 
   async function onConfiguration(event) {
-    // Hack to ensure camera stream is stopped and not left dangling, when
-    // changing to configuration.
-    cameraEnabled = false;
-    await tick();
-    View.gotoConfiguration();
+    await View.gotoConfiguration();
   }
 </script>
 
@@ -189,7 +186,7 @@
         {#if $WebCamUrl.ready && $WebCamUrl.data !== ''}
           <!-- Hack to ensure that the mjpeg stream is canceled if not active. Otherwise the stream stays active even if it is not displayed.-->
           <img
-            src={$Active && cameraEnabled ? $WebCamUrl.data : '#'}
+            src={$Active && $CameraEnabled ? $WebCamUrl.data : '#'}
             alt="Webcam"
             class="stream"
             class:active={$Active} />

@@ -52,3 +52,15 @@ export function setActive(active) {
     sender.send('set-active', active);
   });
 }
+
+export function gotoConfiguration() {
+  registeredWindows.forEach((sender) => {
+    sender.send('goto-configuration');
+  });
+}
+
+export function gotoDashboard() {
+  registeredWindows.forEach((sender) => {
+    sender.send('goto-dashboard');
+  });
+}
