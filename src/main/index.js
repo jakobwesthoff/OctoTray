@@ -10,6 +10,7 @@ unhandled();
 
 async function createMenubar() {
   const index = 'file://' + path.join(__dirname, '../../public', 'index.html');
+  const icon = path.join(__dirname, '../../Resources', 'MenuIconTemplate.png');
 
   return menubar({
     browserWindow: {
@@ -32,6 +33,7 @@ async function createMenubar() {
       hasShadow: true,
     },
     index,
+    icon,
     alwaysOnTop: true,
     preloadWindow: true,
     showDockIcon: false,
