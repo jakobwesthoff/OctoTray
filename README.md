@@ -10,9 +10,10 @@ A MenuBar (TrayBar) application, which is designed to work with an
 [OctoPrint](https://octoprint.org/) server in order to easily access the
 current state of the system as well as ongoing prints.
 
-
-<img alt="Screenshot of Light Mode" src="Resources/Screenshot-LightMode.png" width="640px" />
-<img alt="Screenshot of Dark Mode" src="Resources/Screenshot-DarkMode.png" width="640px" />
+<p align="center">
+    <img alt="Screenshot of Light Mode" src="Resources/Screenshot-LightMode.png" width="640px" />
+    <img alt="Screenshot of Dark Mode" src="Resources/Screenshot-DarkMode.png" width="640px" />
+</p>
 
 
 ## Supported Systems
