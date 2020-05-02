@@ -1,6 +1,10 @@
-# OctoPrint Menubar Status
+# OctoTray
 
 ## About
 
-A simple menubar application to monitor the basic status information of an
-octoprint server.
+A MenuBar (TrayBar) application, which is designed to work with an
+[OctoPrint](https://octoprint.org/) server in order to easily access the
+current state of the system as well as ongoing prints.
+
+
+

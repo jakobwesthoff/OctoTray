@@ -1,8 +1,8 @@
 {
-  "name": "octoprint-menubar-status",
+  "name": "OctoTray",
   "private": true,
   "version": "1.0.0",
-  "description": "A menubar application to monitor an octoprint installation",
+  "description": "A menubar application to work with and monitor an OctoPrint server",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV='production' electron .",
