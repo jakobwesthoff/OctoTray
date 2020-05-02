@@ -44,7 +44,7 @@
     OctoPrintUpdaterInstance.start();
 
     if (await checkConnection(hostname, apikey)) {
-      View.gotoConfiguration;
+      View.gotoConfiguration();
     } else {
       OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostname, apikey));
       View.gotoDashboard();
