@@ -88,10 +88,6 @@
     fill: red;
   }
 
-  .success :global(svg) {
-    fill: green;
-  }
-
   .title {
     font-size: 2.4rem;
     color: var(--text-primary-color);

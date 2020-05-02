@@ -1,20 +1,27 @@
-import { app, BrowserWindow } from 'electron';
+import { app } from 'electron';
 import * as path from 'path';
 import { initIpc, setActive } from './ipc';
 
-import reload from 'electron-reload';
-import devtron from 'devtron';
-
 import { menubar } from 'menubar';
 
-if (!process.env.NODE_ENV !== 'production') {
-  reload(`${__dirname}/../../`, {
-    electron: path.join(`${__dirname}/../../`, 'node_modules', '.bin', 'electron'),
-    awaitWriteFinish: true,
+import unhandled from 'electron-unhandled';
+unhandled();
+
+// https://github.com/electron/electron/issues/9304
+if (process.env.NODE_ENV === 'development') {
+  process.noAsar = true;
+  import('electron-reload').then((reload) => {
+    reload(`${__dirname}/../../`, {
+      electron: path.join(`${__dirname}/../../`, 'node_modules', '.bin', 'electron'),
+      awaitWriteFinish: true,
+    });
   });
+  process.noAsar = false;
 }
 
 async function createMenubar() {
+  const index = 'file://' + path.join(__dirname, '../../public', 'index.html');
+
   return menubar({
     browserWindow: {
       webPreferences: {
@@ -28,9 +35,10 @@ async function createMenubar() {
       height: 340,
       width: 770,
     },
-    dir: path.join(__dirname, '../../public'),
+    index,
     alwaysOnTop: true,
     preloadWindow: true,
+    showDockIcon: true,
   });
 }
 
@@ -43,10 +51,11 @@ let menubarApp;
   initIpc();
 
   menubarApp = await createMenubar();
-  menubarApp.on('ready', () => {
-    menubarApp.showWindow();
 
-    if (process.env.NODE_ENV !== 'production') {
+  menubarApp.on('ready', async () => {
+    if (process.env.NODE_ENV === 'development') {
+      menubarApp.showWindow();
+      const devtron = await import('devtron');
       devtron.install();
       menubarApp.window.webContents.openDevTools();
     }
