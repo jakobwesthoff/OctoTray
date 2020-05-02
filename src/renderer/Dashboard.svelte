@@ -17,6 +17,7 @@
 
   import CameraSvg from '@fortawesome/fontawesome-free/svgs/solid/camera.svg';
   import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/cog.svg';
+  import BackgroundSvg from '../../Resources/Background.svg';
 
   let timeRemaining = '';
   let timeElapsed = '';
@@ -103,6 +104,7 @@
     height: 100%;
     flex-grow: 1;
     padding: 2rem 2rem;
+    position: relative;
   }
 
   .title {
@@ -176,6 +178,24 @@
     font-weight: bold;
     overflow: hidden;
   }
+
+  .background {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .background :global(svg .light) {
+    fill: var(--accent-background-secondary);
+  }
+  .background :global(svg .dark) {
+    fill: var(--text-primary-color);
+  }
 </style>
 
 <Window>
@@ -194,6 +214,9 @@
       </div>
     </div>
     <div class="right">
+      <div class="background">
+        {@html BackgroundSvg}
+      </div>
       <div class="title">
         <div class="printer-name">
           {#if $CurrentPrinterProfile.ready}
