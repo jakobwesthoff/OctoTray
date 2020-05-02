@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import * as uuid from 'uuid';
 import { deserializeError } from 'serialize-error';
-import { Active, View } from '../stores/view';
+import { Active, View, DarkMode } from '../stores/view';
 
 export async function ipc(name, data) {
   const responseId = `${name}-${uuid.v4()}`;
@@ -30,5 +30,9 @@ export async function initIpc() {
 
   ipcRenderer.on('goto-configuration', (event) => {
     View.gotoConfiguration();
+  });
+
+  ipcRenderer.on('set-dark-mode', (event, darkMode) => {
+    DarkMode.set(darkMode);
   });
 }

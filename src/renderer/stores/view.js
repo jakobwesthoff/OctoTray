@@ -29,3 +29,5 @@ export const View = (() => {
 export const Active = writable(false);
 
 export const CameraEnabled = writable(false);
+
+export const DarkMode = writable(false);

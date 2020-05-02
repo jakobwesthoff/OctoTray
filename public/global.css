@@ -10,30 +10,28 @@ html {
   background-color: transparent;
 }
 
-:root {
-  --main-font-color: #000000;
-  --main-background-color: #ffffff;
-
-  --header-background-color: #f4f5f6;
-  --header-font-color: var(--main-font-color);
-  --header-subtitle-color: #817d7d;
-  --header-border-color: #d1d1d1;
-
-  --footer-background-color: var(--header-background-color);
-  --footer-border-color: var(--header-border-color);
-
-  --accent-color: #ffc300;
-  --accent-color-light: #fff3d4;
-  --accent-color-dark: #fd9431;
-  --accent-color-disabled: #d1d1d1;
-
-  --dashboard-camera-icon: #f4f5f6;
-
+body {
+  --window-background-color: #ffffff;
   --text-primary-color: #000000;
   --text-secondary-color: #777777;
 
+  --accent-color: #ffc300;
+  --accent-color-disabled: #d1d1d1;
+
   --accent-background-color: #e1e1e1;
   --accent-background-secondary: #606c76;
+}
+
+body.dark-mode {
+  --window-background-color: #242424;
+  --text-primary-color: #DFDFDF;
+  --text-secondary-color: #ABABAB;
+
+  --accent-color: #ffc300;
+  --accent-color-disabled: #333333;
+
+  --accent-background-color: #454545;
+  --accent-background-secondary:#777777;
 }
 
 ::selection {
@@ -49,6 +47,7 @@ input[type='text'],
 input[type='url'],
 textarea,
 select {
+  color: var(--text-primary-color);
   border-color: var(--accent-background-color);
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }

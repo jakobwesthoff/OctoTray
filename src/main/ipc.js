@@ -64,3 +64,9 @@ export function gotoDashboard() {
     sender.send('goto-dashboard');
   });
 }
+
+export function setDarkMode(darkMode) {
+  registeredWindows.forEach((sender) => {
+    sender.send('set-dark-mode', darkMode);
+  });
+}

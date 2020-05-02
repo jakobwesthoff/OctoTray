@@ -1,5 +1,6 @@
 <script>
-  import { View, DASHBOARD, CONFIGURATION } from './stores/view';
+  import { onMount } from 'svelte';
+  import { View, DASHBOARD, CONFIGURATION, DarkMode } from './stores/view';
 
   import Configuration from './Configuration.svelte';
   import Dashboard from './Dashboard.svelte';
@@ -21,6 +22,19 @@
         activeViewComponent = undefined;
     }
   }
+
+  onMount(() => {
+    const unsubscribe = DarkMode.subscribe((darkMode) => {
+      const body = document.getElementsByTagName('body')[0];
+      if (darkMode) {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+    });
+
+    return unsubscribe;
+  });
 
   (async () => {
     const {

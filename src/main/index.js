@@ -1,6 +1,6 @@
-import { app, Menu } from 'electron';
+import { app, Menu, nativeTheme } from 'electron';
 import * as path from 'path';
-import { initIpc, setActive, gotoConfiguration } from './ipc';
+import { initIpc, setActive, gotoConfiguration, setDarkMode } from './ipc';
 
 import { menubar } from 'menubar';
 
@@ -21,18 +21,20 @@ async function createMenubar() {
       show: false,
       transparent: true,
       frame: false,
-      height: 300,
-      width: 750,
+      // height: 300,
+      // width: 750,
+      height: 250 + 2 * 10,
+      width: 700 + 2 * 10,
       moveable: false,
       resizable: false,
       minimizable: false,
       maximizable: false,
+      hasShadow: true,
     },
     index,
     alwaysOnTop: true,
     preloadWindow: true,
     showDockIcon: false,
-    hasShadow: false,
   });
 }
 
@@ -84,6 +86,11 @@ let menubarApp;
 
   menubarApp.on('ready', async () => {
     menubarApp.tray.on('right-click', () => menubarApp.tray.popUpContextMenu(contextMenu));
+
+    nativeTheme.on('updated', () => {
+      setDarkMode(nativeTheme.shouldUseDarkColors);
+    });
+    setDarkMode(nativeTheme.shouldUseDarkColors);
 
     if (process.env.NODE_ENV === 'development') {
       menubarApp.showWindow();
