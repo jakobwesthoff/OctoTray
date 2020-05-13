@@ -9,7 +9,7 @@
     top: 10px;
     left: 10px;
     width: 700px;
-    height: 250px;
+    height: 260px;
     background-color: var(--window-background-color);
     color: var(--text-primary-color);
     border-radius: 17px;

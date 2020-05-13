@@ -4,7 +4,7 @@
   import ExclamationSvg from '@fortawesome/fontawesome-free/svgs/solid/exclamation-circle.svg';
   import CheckSvg from '@fortawesome/fontawesome-free/svgs/solid/check-circle.svg';
 
-  import { View } from './stores/view';
+  import { View, TrayModeAvailable } from './stores/view';
 
   import Window from './Components/Window.svelte';
 
@@ -17,6 +17,8 @@
 
   let hostnameValue;
   let apikeyValue;
+  let trayModeValue;
+  let activeTrayMode;
   let loading = true;
 
   let connectionChecked = false;
@@ -41,10 +43,18 @@
         return;
       }
 
-      await ipc('set-configuration', { octoprint: { hostname: hostnameValue, apikey: apikeyValue } });
+      await ipc('set-configuration', {
+        octoprint: { hostname: hostnameValue, apikey: apikeyValue },
+        traymode: trayModeValue,
+      });
       OctoPrintUpdaterInstance.setApi(new OctoPrintApi(hostnameValue, apikeyValue));
 
-      View.gotoDashboard();
+      if (activeTrayMode !== trayModeValue) {
+        // Traymode config change requires an app restart.
+        await ipc('show-dialog-and-restart');
+      } else {
+        View.gotoDashboard();
+      }
     });
   }
 
@@ -59,10 +69,13 @@
     withLoading(async () => {
       const {
         octoprint: { hostname, apikey },
+        traymode,
       } = await ipc('get-configuration');
 
       hostnameValue = hostname;
       apikeyValue = apikey;
+      trayModeValue = traymode;
+      activeTrayMode = traymode;
     });
   });
 </script>
@@ -82,6 +95,7 @@
   .title-container span :global(svg) {
     width: 3rem;
     height: 3rem;
+    flex-shrink: 1;
   }
 
   .error :global(svg) {
@@ -105,8 +119,10 @@
 
   .left {
     flex-grow: 1;
-    padding: 2rem 2rem;
+    padding: 1rem 2rem;
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .right {
@@ -126,11 +142,19 @@
     margin-bottom: 2px;
   }
 
-  label {
+  form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0;
+  }
+
+  label:not(.normal) {
     font-size: 1.7rem;
     color: var(--text-secondary-color);
     font-weight: bold;
-    margin-top: 0.8rem;
+    margin-top: 0.3rem;
   }
 
   input[type='text'] {
@@ -140,6 +164,7 @@
 
   fieldset {
     padding: 0;
+    margin: 0 0 .3rem 0;
   }
 </style>
 
@@ -160,9 +185,17 @@
         <fieldset>
           <label for="hostname">Octoprint Hostname</label>
           <input type="text" id="hostname" bind:value={hostnameValue} disabled={loading} />
+        </fieldset>
+        <fieldset>
           <label for="apikey">ApiKey</label>
           <input type="text" id="apikey" bind:value={apikeyValue} disabled={loading} />
         </fieldset>
+        {#if $TrayModeAvailable}
+          <fieldset>
+            <input type="checkbox" id="traymode" bind:checked={trayModeValue} disabled={loading} />
+            <label class="label-inline normal" for="traymode">Use Tray / Menubar Mode</label>
+          </fieldset>
+        {/if}
       </form>
     </div>
     <div class="right">

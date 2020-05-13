@@ -1,13 +1,18 @@
 import 'normalize.css';
 import 'milligram';
 
-import {initIpc} from './Library/ipc';
+import { initIpc, ipc } from './Library/ipc';
 
 import App from './App.svelte';
+import { TrayModeAvailable } from './stores/view';
 
-initIpc();
+(async () => {
+  initIpc();
 
-const app = new App({
-  target: document.body,
-});
-export default app;
+  const trayModeAvailable = await ipc('is-tray-mode-available');
+  TrayModeAvailable.set(trayModeAvailable);
+
+  new App({
+    target: document.body,
+  });
+})();
