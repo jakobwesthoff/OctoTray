@@ -64,7 +64,6 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "devtron": "^1.4.0",
     "electron-reload": "^1.5.0",
-    "lodash": "^4.17.15",
     "milligram": "^1.3.0",
     "normalize.css": "^8.0.1"
   },
@@ -75,6 +74,7 @@
     "esm": "^3.2.25",
     "node-fetch": "^2.6.0",
     "serialize-error": "^6.0.0",
-    "uuid": "^7.0.3"
+    "uuid": "^7.0.3",
+    "lodash": "^4.17.15"
   }
 }
