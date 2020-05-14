@@ -1,5 +1,6 @@
 <script>
   import Window from './Components/Window.svelte';
+  import WindowControls from './Components/WindowControls.svelte';
 
   import { onMount, onDestroy, tick } from 'svelte';
 
@@ -16,7 +17,6 @@
   import { View, Active, CameraEnabled } from './stores/view';
 
   import CameraSvg from '@fortawesome/fontawesome-free/svgs/solid/camera.svg';
-  import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/cog.svg';
   import BackgroundSvg from '../../Resources/Background.svg';
 
   let timeRemaining = '';
@@ -52,6 +52,14 @@
 
   async function onConfiguration(event) {
     await View.gotoConfiguration();
+  }
+
+  async function onMinimize(event) {
+    await ipc('minimize-sender');
+  }
+
+  async function onQuit(event) {
+    await ipc('quit-application');
   }
 </script>
 
@@ -93,6 +101,7 @@
     justify-content: left;
     align-items: center;
     height: 100%;
+    width: 100%;
   }
 
   .side-by-side .left {
@@ -102,9 +111,12 @@
 
   .side-by-side .right {
     height: 100%;
+    width: 100%;
+    max-width: 100%;
     flex-grow: 1;
     padding: 2rem 2rem;
     position: relative;
+    overflow: hidden;
   }
 
   .title {
@@ -112,27 +124,19 @@
     flex-direction: row;
     margin: 0 0 1.3rem 0;
   }
+  .window-controls {
+    flex-shrink: 0;
+  }
 
   .printer-name {
     font-size: 2rem;
     color: var(--text-secondary-color);
     font-weight: bold;
-    flex-grow: 1;
-  }
-
-  .configuration {
     flex-shrink: 1;
-  }
-
-  .configuration :global(svg) {
-    fill: var(--accent-background-color);
-    width: 3rem;
-    height: 3rem;
-    transition: fill 0.2s ease-in-out;
-  }
-
-  .configuration :global(svg):hover {
-    fill: var(--accent-background-secondary);
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .printer-state {
@@ -220,11 +224,11 @@
       <div class="title">
         <div class="printer-name">
           {#if $CurrentPrinterProfile.ready}
-            {$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model}
+            {$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model} - Foobar - Baz - Bar - Blub
           {/if}
         </div>
-        <div class="configuration" on:click={onConfiguration}>
-          {@html CogSvg}
+        <div class="window-controls">
+          <WindowControls on:configuration={onConfiguration} on:minimize={onMinimize} on:quit={onQuit} />
         </div>
       </div>
       {#if $CurrentJob.ready}

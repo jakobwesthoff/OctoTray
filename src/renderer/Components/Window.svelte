@@ -1,6 +1,11 @@
 <script>
+  import { TrayModeEnabled } from '../stores/view';
+
   import { fade } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
+
+  let drag;
+  $: drag = !$TrayModeEnabled;
 </script>
 
 <style>
@@ -17,11 +22,13 @@
     overflow: hidden;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
+  }
+
+  .drag {
+    -webkit-app-region: drag;
   }
 </style>
 
-<div class="window" transition:fade={{ duration: 400, easing: quintOut }}>
+<div class="window" class:drag transition:fade={{ duration: 400, easing: quintOut }}>
   <slot />
 </div>

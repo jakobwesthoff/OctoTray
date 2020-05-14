@@ -33,3 +33,4 @@ export const CameraEnabled = writable(false);
 export const DarkMode = writable(false);
 
 export const TrayModeAvailable = writable(false);
+export const TrayModeEnabled = writable(false);

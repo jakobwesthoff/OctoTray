@@ -193,7 +193,7 @@
         {#if $TrayModeAvailable}
           <fieldset>
             <input type="checkbox" id="traymode" bind:checked={trayModeValue} disabled={loading} />
-            <label class="label-inline normal" for="traymode">Use Tray / Menubar Mode</label>
+            <label class="label-inline normal no-drag" for="traymode">Use Tray / Menubar Mode</label>
           </fieldset>
         {/if}
       </form>

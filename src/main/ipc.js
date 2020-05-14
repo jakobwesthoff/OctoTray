@@ -1,29 +1,15 @@
-import { ipcMain, dialog, app } from 'electron';
-import Store from 'electron-store';
+import { ipcMain, dialog, app, BrowserWindow } from 'electron';
 import fetch from 'node-fetch';
 import { serializeError } from 'serialize-error';
 import { isTrayModeAvailable } from './trayAvailable';
 import merge from 'lodash/merge';
+import { defaultConfiguration, configuration } from './configuration';
 
 const registeredWindows = [];
-
-const defaultConfiguration = {
-  octoprint: {
-    hostname: '',
-    apikey: '',
-  },
-  traymode: isTrayModeAvailable() ? true : false,
-};
 
 const trayModeOverride = isTrayModeAvailable() ? {} : { traymode: false };
 
 export function initIpc() {
-  const store = new Store();
-  if (store.size === 0) {
-    // Initialize
-    store.set(defaultConfiguration);
-  }
-
   ipcMain.on('register-window', (event) => {
     registeredWindows.push(event.sender);
   });
@@ -33,28 +19,39 @@ export function initIpc() {
   });
 
   ipcMain.on('get-configuration', (event, responseId) => {
-    event.sender.send(responseId, false, merge(defaultConfiguration, store.store, trayModeOverride));
+    event.sender.send(responseId, false, merge(defaultConfiguration, configuration.store, trayModeOverride));
   });
 
   ipcMain.on('set-configuration', (event, responseId, data) => {
-    store.set(merge(defaultConfiguration, store.store, data, trayModeOverride));
-    event.sender.send(responseId, false, store.store);
+    configuration.set(merge(defaultConfiguration, configuration.store, data, trayModeOverride));
+    event.sender.send(responseId, false, configuration.store);
   });
 
   ipcMain.on('show-dialog-and-restart', async (event, responseId) => {
-      await dialog.showMessageBox(undefined, {
-        type: 'info',
-        buttons: ['Restart'],
-        title: 'Application restart required',
-        detail: 'The application needs to restart in order to acommodate some of the configuration changes you made.',
-        message:'The Application will exit and restart now.',
-        icon: `${__dirname}/icons/messagebox.png`,
-        noLink: true,
-      });
+    await dialog.showMessageBox(undefined, {
+      type: 'info',
+      buttons: ['Restart'],
+      title: 'Application restart required',
+      detail: 'The application needs to restart in order to acommodate some of the configuration changes you made.',
+      message: 'The Application will exit and restart now.',
+      icon: `${__dirname}/icons/messagebox.png`,
+      noLink: true,
+    });
 
-      app.relaunch();
-      event.sender.send(responseId, false);
-      app.quit();
+    app.relaunch();
+    event.sender.send(responseId, false);
+    app.quit();
+  });
+
+  ipcMain.on('minimize-sender', async (event, responseId) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    win.minimize();
+    event.sender.send(responseId, false);
+  });
+
+  ipcMain.on('quit-application', async (event, responseId) => {
+    event.sender.send(responseId, false);
+    app.quit();
   });
 
   ipcMain.on('fetch-http', async (event, responseId, { url, opts }) => {

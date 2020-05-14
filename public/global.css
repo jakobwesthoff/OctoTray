@@ -24,14 +24,14 @@ body {
 
 body.dark-mode {
   --window-background-color: #242424;
-  --text-primary-color: #DFDFDF;
-  --text-secondary-color: #ABABAB;
+  --text-primary-color: #dfdfdf;
+  --text-secondary-color: #ababab;
 
   --accent-color: #ffc300;
   --accent-color-disabled: #333333;
 
   --accent-background-color: #454545;
-  --accent-background-secondary:#777777;
+  --accent-background-secondary: #777777;
 }
 
 ::selection {
@@ -45,11 +45,13 @@ input[type='search'],
 input[type='tel'],
 input[type='text'],
 input[type='url'],
+input[type='checkbox'],
 textarea,
 select {
   color: var(--text-primary-color);
   border-color: var(--accent-background-color);
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  -webkit-app-region: no-drag;
 }
 input[type='email']:focus,
 input[type='number']:focus,
@@ -58,6 +60,7 @@ input[type='search']:focus,
 input[type='tel']:focus,
 input[type='text']:focus,
 input[type='url']:focus,
+input[type='checkbox'],
 textarea:focus,
 select:focus {
   border-color: var(--accent-background-secondary);
@@ -72,6 +75,7 @@ input[type='submit'] {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   border: none;
   color: var(--main-font-color);
+  -webkit-app-region: no-drag;
 }
 
 .button:focus,
@@ -88,10 +92,24 @@ input[type='submit']:hover {
   color: var(--accent-color);
 }
 
-.button[disabled]:focus, .button[disabled]:hover, button[disabled]:focus, button[disabled]:hover, input[type='button'][disabled]:focus, input[type='button'][disabled]:hover, input[type='reset'][disabled]:focus, input[type='reset'][disabled]:hover, input[type='submit'][disabled]:focus, input[type='submit'][disabled]:hover {
+.button[disabled]:focus,
+.button[disabled]:hover,
+button[disabled]:focus,
+button[disabled]:hover,
+input[type='button'][disabled]:focus,
+input[type='button'][disabled]:hover,
+input[type='reset'][disabled]:focus,
+input[type='reset'][disabled]:hover,
+input[type='submit'][disabled]:focus,
+input[type='submit'][disabled]:hover {
   background-color: var(--accent-background-color);
   border: none;
   color: var(--main-font-color);
+  -webkit-app-region: no-drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
 }
 
 /**
@@ -103,12 +121,6 @@ input[type='submit']:hover {
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
-}
-input,
-button,
-textarea,
-:focus {
-  outline: none; // You should add some other style for :focus to help UX/a11y
 }
 
 a:not([draggable='true']),
