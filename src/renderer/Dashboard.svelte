@@ -224,7 +224,7 @@
       <div class="title">
         <div class="printer-name">
           {#if $CurrentPrinterProfile.ready}
-            {$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model} - Foobar - Baz - Bar - Blub
+            {$CurrentPrinterProfile.data.name} - {$CurrentPrinterProfile.data.model}
           {/if}
         </div>
         <div class="window-controls">
